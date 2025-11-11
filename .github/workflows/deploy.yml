@@ -27,13 +27,13 @@ jobs:
       - name: Prepare target directory
         run: |
           ssh -o StrictHostKeyChecking=no -i ${{ secrets.CPANEL_SSH_PRIVATE_KEY }} \
-          ${{ secrets.CPANEL_SSH_USERNAME }}@${{ secrets.CPANEL_SSH_HOST }} \
+          ${{ secrets.CPANEL_SSH_USERNAME }}@65.254.93.21 \
           "mkdir -p /home/${{ secrets.CPANEL_SSH_USERNAME }}/public_html/recruitiq && rm -rf /home/${{ secrets.CPANEL_SSH_USERNAME }}/public_html/recruitiq/*"
 
       - name: Deploy build folder via SFTP
         uses: appleboy/scp-action@v0.1.4
         with:
-          host: ${{ secrets.CPANEL_SSH_HOST }} # Use IP here
+          host: 65.254.93.21
           username: ${{ secrets.CPANEL_SSH_USERNAME }}
           key: ${{ secrets.CPANEL_SSH_PRIVATE_KEY }}
           source: "./build/*"
