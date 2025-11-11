@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/static/css/main.de9d10ad.css",
+    "main.js": "/static/js/main.9531aed5.js",
+    "static/media/kpi-logo.png": "/static/media/kpi-logo.d61f3f289fe9c06c930a.png",
+    "index.html": "/index.html",
+    "main.de9d10ad.css.map": "/static/css/main.de9d10ad.css.map",
+    "main.9531aed5.js.map": "/static/js/main.9531aed5.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.de9d10ad.css",
+    "static/js/main.9531aed5.js"
+  ]
+}

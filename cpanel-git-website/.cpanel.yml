@@ -1,0 +1,9 @@
+environment:
+  name: cpanel-git-website
+  type: git
+  deploy:
+    branch: main
+    remote: origin
+    path: /home/username/public_html/cpanel-git-website
+    hooks:
+      post-deploy: ./deploy.sh

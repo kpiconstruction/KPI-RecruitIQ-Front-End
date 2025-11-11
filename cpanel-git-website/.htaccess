@@ -1,0 +1,22 @@
+# .htaccess file for configuring web server settings
+
+# Enable URL rewriting
+RewriteEngine On
+
+# Redirect www to non-www
+RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
+# Set default document
+DirectoryIndex index.html
+
+# Deny access to certain files
+<FilesMatch "\.(git|htaccess|sh|yml)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Enable compression for certain file types
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
