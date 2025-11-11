@@ -1,12 +1,11 @@
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        neon: '#39FF14',
-        'neon-light': '#66FF66'
-      }
-    }
+        neon: '#06b6d4',
+      },
+    },
   },
   plugins: [],
 }
