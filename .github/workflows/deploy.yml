@@ -24,11 +24,11 @@ jobs:
       - name: Build React app
         run: npm run build
 
-      - name: Clean target directory on server
+      - name: Prepare target directory
         run: |
           ssh -o StrictHostKeyChecking=no -i ${{ secrets.CPANEL_SSH_PRIVATE_KEY }} \
           ${{ secrets.CPANEL_SSH_USERNAME }}@${{ secrets.CPANEL_SSH_HOST }} \
-          "rm -rf /home/${{ secrets.CPANEL_SSH_USERNAME }}/public_html/recruitiq/*"
+          "mkdir -p /home/${{ secrets.CPANEL_SSH_USERNAME }}/public_html/recruitiq && rm -rf /home/${{ secrets.CPANEL_SSH_USERNAME }}/public_html/recruitiq/*"
 
       - name: Deploy build folder via SFTP
         uses: appleboy/scp-action@v0.1.4
