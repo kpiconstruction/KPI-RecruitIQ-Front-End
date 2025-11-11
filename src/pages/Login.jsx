@@ -1,25 +1,27 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Container, TextField, Button, Typography } from '@mui/material';
 
 function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [credentials, setCredentials] = useState({ username: '', password: '' });
 
-  const handleLogin = () => {
-    axios.post('/api/login', { username, password }).then(response => {
-      alert('Logged in');
+  const handleChange = e => setCredentials({ ...credentials, [e.target.name]: e.target.value });
+  const handleSubmit = e => {
+    e.preventDefault();
+    axios.post('/api/login', credentials).then(response => {
       localStorage.setItem('token', response.data.token);
+      alert('Login successful!');
     });
   };
 
   return (
-    <Container>
-      <Typography variant="h4" gutterBottom>Login</Typography>
-      <TextField label="Username" fullWidth margin="normal" value={username} onChange={e => setUsername(e.target.value)} />
-      <TextField label="Password" type="password" fullWidth margin="normal" value={password} onChange={e => setPassword(e.target.value)} />
-      <Button variant="contained" color="primary" onClick={handleLogin}>Login</Button>
-    </Container>
+    <div className="max-w-md mx-auto bg-gray-800 p-6 rounded-lg shadow">
+      <h3 className="text-2xl font-bold mb-4">Login</h3>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input name="username" placeholder="Username" value={credentials.username} onChange={handleChange} className="w-full p-3 rounded bg-gray-700 text-white" />
+        <input type="password" name="password" placeholder="Password" value={credentials.password} onChange={handleChange} className="w-full p-3 rounded bg-gray-700 text-white" />
+        <button type="submit" className="bg-neon text-gray-900 font-bold py-2 px-4 rounded hover:bg-neon-light transition">Login</button>
+      </form>
+    </div>
   );
 }
 
