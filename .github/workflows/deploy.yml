@@ -1,8 +1,9 @@
-name: RecruitIQ Secure Deploy
+name: Deploy React Frontend to cPanel
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main  # Adjust if your deployment branch is different
 
 jobs:
   build-and-deploy:
@@ -12,23 +13,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: PHP Syntax Check
-        run: |
-          sudo apt-get update
-          sudo apt-get install php-cli -y
-          find . -name "*.php" -exec php -l {} \;
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-      - name: Python Lint Check
-        run: |
-          python3 -m pip install --upgrade pip
-          pip install flake8
-          flake8 modules/
+      - name: Install dependencies
+        run: npm install
 
-      - name: Deploy via SFTP
+      - name: Build React app
+        run: npm run build
+
+      - name: Clean target directory on server
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.CPANEL_SSH_PRIVATE_KEY }} ${{ secrets.CPANEL_SSH_USERNAME }}@${{ secrets.CPANEL_SSH_HOST }} "rm -rf /home/your-cpanel-username/public_html/recruitiq/*"
+
+      - name: Deploy build folder via SFTP
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.CPANEL_SSH_HOST }}
           username: ${{ secrets.CPANEL_SSH_USERNAME }}
           key: ${{ secrets.CPANEL_SSH_PRIVATE_KEY }}
-          source: "./"
+          source: "./dist"   # or ./build depending on your React config
           target: "/home/your-cpanel-username/public_html/recruitiq/"
