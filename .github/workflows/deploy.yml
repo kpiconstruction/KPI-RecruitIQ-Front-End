@@ -33,7 +33,7 @@ jobs:
       - name: Deploy build folder via SFTP
         uses: appleboy/scp-action@v0.1.4
         with:
-          host: ${{ secrets.CPANEL_SSH_HOST }}
+          host: ${{ secrets.CPANEL_SSH_HOST }} # Use IP here
           username: ${{ secrets.CPANEL_SSH_USERNAME }}
           key: ${{ secrets.CPANEL_SSH_PRIVATE_KEY }}
           source: "./build/*"
