@@ -1,4 +1,4 @@
-name: Deploy React Frontend to cPanel
+name: Deploy React Frontend to cPanel (File-by-File)
 
 on:
   push:
@@ -24,33 +24,11 @@ jobs:
       - name: Build React app
         run: npm run build
 
-      - name: Zip build folder
-        run: zip -r build.zip build
-
-      - name: Clear old files
+      - name: Upload files individually
         run: |
-          curl -k --max-time 600 --retry 3 -u "${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}" \
-            -d "dir=/public_html/recruitiq.automatedconetruck.com.au" \
-            -d "files[]=*" \
-            -d "skiptrash=1" \
-            "https://${{ secrets.CPANEL_SSH_HOST }}:2083/execute/Fileman/delete"
-
-      - name: Upload ZIP
-        run: |
-          curl -k --max-time 600 --retry 3 -u "${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}" \
-            -F "file=@build.zip" \
-            -F "dir=/public_html/recruitiq.automatedconetruck.com.au" \
-            "https://${{ secrets.CPANEL_SSH_HOST }}:2083/execute/Fileman/upload_files"
-
-      - name: Extract ZIP
-        run: |
-          curl -k --max-time 600 --retry 3 -u "${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}" \
-            -d "sourcefile=/public_html/recruitiq.automatedconetruck.com.au/build.zip" \
-            -d "destdir=/public_html/recruitiq.automatedconetruck.com.au" \
-            "https://${{ secrets.CPANEL_SSH_HOST }}:2083/execute/Fileman/extract_archive"
-
-      - name: Delete ZIP
-        run: |
-          curl -k --max-time 600 --retry 3 -u "${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}" \
-            -d "file=/public_html/recruitiq.automatedconetruck.com.au/build.zip" \
-            "https://${{ secrets.CPANEL_SSH_HOST }}:2083/execute/Fileman/delete"
+          for file in $(find build -type f); do
+            curl -k --max-time 600 --retry 3 -u "${{ secrets.CPANEL_USERNAME }}:${{ secrets.CPANEL_PASSWORD }}" \
+              -F "file=@$file" \
+              -F "dir=/public_html/recruitiq.automatedconetruck.com.au/${file#build/}" \
+              "https://${{ secrets.CPANEL_SSH_HOST }}:2083/execute/Fileman/upload_files"
+          done
